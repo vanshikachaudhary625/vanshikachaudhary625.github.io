@@ -1,59 +1,476 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Pinterest Clone</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pinterest-style Left Nav</title>
+  <style>
+    :root {
+      --sidebar-w: 80px;
+      --bg: #ffffff;
+      --border: #e5e7eb;
+      --text: #111827;
+      --muted: #6b7280;
+      --hover: #f3f4f6;
+      --red: #e60023;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: #fafafa;
+      color: var(--text);
+    }
+
+    /* Layout */
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-w);
+      z-index: 1000;
+      height: 100vh;
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 0;
+    }
+
+    /* Logo "P" badge */
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--red);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      user-select: none;
+    }
+    /* Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-w);   /* sidebar ke baad start hoga */
+  right: 0;
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1000;
+}
+
+/* Logo */
+.header .logo {
+  font-weight: bold;
+  font-size: 20px;
+  color: #e60023;
+}
+
+/* Search Bar */
+.search-bar {
+  flex: 1;
+  max-width: 1000px;
+  margin: 0 40px;
+  display: flex;
+  align-items: center;
+  background: #f3f3f3;
+  border-radius: 24px;
+  padding: 6px 12px;
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 16px;
+  padding: 8px;
+}
+
+.search-bar button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* Profile icon */
+.header .profile {
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* Content area adjust for header */
+.content {
+  margin-left: var(--sidebar-w);
+  padding: 80px 24px 24px; /* 80px top padding so content header ke niche aaye */
+}
+
+
+.search-bar button:hover {
+  color: #e60023; /* Pinterest red on hover */
+}
+
+
+
+    .sidebar .divider {
+      width: 60%;
+      height: 1px;
+      background: var(--border);
+      margin: 12px 0;
+    }
+
+    /* Nav items */
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .nav-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.15s ease;
+      position: relative;
+    }
+
+    .nav-btn:hover { background: var(--hover); }
+    
+
+    /* Tooltip labels on hover (desktop) */
+    .nav-btn .label {
+      position: absolute;
+      left: 72px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      color: var(--text);
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s ease;
+    }
+
+    .nav-btn:hover .label { opacity: 1; }
+
+    /* SVG icons */
+    .icon {
+      width: 24px;
+      height: 24px;
+      stroke: var(--text);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .icon-fill { fill: var(--text); stroke: none; }
+
+    /* Bottom section (profile/settings) */
+    .bottom {
+      margin-top: auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding-bottom: 12px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #ddd;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      color: #fff;
+      font-weight: 600;
+    }
+   
+    /* Main content area pushed by sidebar */
+    .content {
+  margin-left: var(--sidebar-w);
+  width: calc(100% - var(--sidebar-w));
+  padding: 30px;
+  overflow-x: hidden;   /* horizontal scroll hatao */
+}
+
+.masonry {
+  column-count: 4;
+  column-gap: 20px;
+  width: 100%;          /* ensure full width */
+}
+
+    .card {
+      display: inline-block;
+      width: 100%;
+      margin: 0 0 20px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+      position: relative;
+    }
+    .card img {
+      width: 100%;
+      display: block;
+    }
+    /* Overlay hidden by default */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4); /* semi-transparent dark */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Show overlay on hover */
+.card:hover .overlay {
+  opacity: 1;
+}
+
+/* Save button */
+.save-btn {
+  align-self: flex-end;
+  background: #e60023; /* Pinterest red */
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Icons bottom */
+.icons {
+  display: flex;
+  gap: 10px;
+  color: #fff;
+  font-size: 20px;
+}
+
+    .card img:hover {
+       filter: brightness(70%);
+       }
+
+    /* Responsiveness */
+    @media (max-width: 1200px) { .masonry { column-count: 4; } }
+    @media (max-width: 992px)  { .masonry { column-count: 3; } }
+    @media (max-width: 768px)  { .masonry { column-count: 2; } }
+    @media (max-width: 560px)  {
+      :root { --sidebar-w: 64px; }
+      .nav-btn .label { display: none; }
+      .masonry { column-count: 1; }
+    }
+  </style>
 </head>
 <body>
+  <header class="header">  <div class="search-bar">
+   <input type="text" placeholder="Search for ideas..." /> <button>🔍</button> </div> </header>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Primary">
+      <div class="logo" aria-label="Pinterest">P</div>
 
-<!-- ===== NAVBAR ===== -->
-<header class="navbar">
-    <div class="nav-left">
-        <img src="https://tse3.mm.bing.net/th/id/OIP.09F15WCuEz8e1c1OwXN1GgHaHa?pid=Api&P=0&h=180" class="logo">
-        <a href="#">Home</a>
-        <a href="#">Explore</a>
-        <a href="#">Create</a>
-    </div>
+      <div class="nav" role="navigation">
+        <!-- Home -->
+        <button class="nav-btn active" aria-label="Home">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 10.5L12 3l9 7.5v9a1.5 1.5 0 0 1-1.5 1.5H4.5A1.5 1.5 0 0 1 3 19.5v-9z"/>
+           <path d="M9 21V12h6v9" />
+          </svg>
+          <span class="label">Home</span>
+        </button>
 
-    <div class="nav-center">
-        <input type="text" placeholder="Search">
-    </div>
+        <!-- Explore -->
+        <button class="nav-btn" aria-label="Explore">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="M20 20l-3.5-3.5" />
+          </svg>
+          <span class="label">Explore</span>
+        </button>
 
-    <div class="nav-right">
-        <img src="https://tse2.mm.bing.net/th/id/OIP.HSqW8UrbfTtWWd0VvzZQkgHaHa?pid=Api&P=0&h=180">
-        <img src="https://tse2.mm.bing.net/th/id/OIP.T0178W_A8RT7ksOLUr_j9QHaHa?pid=Api&P=0&h=180">
-        <img src="https://tse1.mm.bing.net/th/id/OIP.7O4_GREtLbxqPdJCTmfatQHaHa?pid=Api&P=0&h=180" class="profile">
-    </div>
-</header>
+        <!-- Create -->
+        <button class="nav-btn" aria-label="Create">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          <span class="label">Create</span>
+        </button>
 
-<!-- ===== IMAGE GRID ===== -->
-<div class="container">
-    <img src="https://picsum.photos/300/400">
-    <img src="https://picsum.photos/300/500">
-    <img src="https://picsum.photos/300/350">
-    <img src="https://picsum.photos/300/450">
-    <img src="https://picsum.photos/300/550">
-    <img src="https://picsum.photos/300/380">
-    <img src="https://picsum.photos/300/480">
-    <img src="https://picsum.photos/300/420">
-    <img src="https://picsum.photos/300/420">
-    <img src="https://picsum.photos/300/500">
-    <img src="https://picsum.photos/300/380">
-    <img src="https://picsum.photos/300/460">
-    <img src="https://picsum.photos/300/540">
-    <img src="https://picsum.photos/300/410">
-    <img src="https://picsum.photos/300/490">
-    <img src="https://picsum.photos/300/360">
-    <img src="https://picsum.photos/300/430">
-    <img src="https://picsum.photos/300/520">
-    <img src="https://picsum.photos/300/390">
-    <img src="https://picsum.photos/300/470">
-    <img src="https://picsum.photos/300/560">
-    <img src="https://picsum.photos/300/405">
-    <img src="https://picsum.photos/300/495">
-    <img src="https://picsum.photos/300/365">
-</div>
+        <!-- Following -->
+        <button class="nav-btn" aria-label="Following">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4z" />
+            <path d="M18 21v-1a5 5 0 0 0-10 0v1" />
+          </svg>
+          <span class="label">Following</span>
+        </button>
 
+        <!-- Saved -->
+        <button class="nav-btn" aria-label="Saved">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z" />
+          </svg>
+          <span class="label">Saved</span>
+        </button>
+      </div>
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <!-- Bottom actions -->
+      <div class="bottom">
+        <button class="nav-btn" aria-label="Notifications">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2z" />
+            <path d="M18 16V11a6 6 0 1 0-12 0v5l-2 2h16l-2-2z" />
+          </svg>
+          <span class="label">Notifications</span>
+        </button>
+
+        <button class="nav-btn" aria-label="Messages">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8z" />
+          </svg>
+          <span class="label">Messages</span>
+        </button>
+
+        <div class="avatar" aria-label="Profile">V</div>
+
+        <button class="nav-btn" aria-label="Settings">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+            <path d="M19.4 15a7.8 7.8 0 0 0 .1-2l2.1-1.6-2-3.4-2.5.6a7.9 7.9 0 0 0-1.7-1l-.4-2.6h-4l-.4 2.6a7.9 7.9 0 0 0-1.7 1l-2.5-.6-2 3.4 2.1 1.6a7.8 7.8 0 0 0 .1 2L4.6 16l2 3.4 2.5-.6c.5.4 1.1.7 1.7 1l.4 2.6h4l.4-2.6c.6-.3 1.2-.6 1.7-1l2.5.6 2-3.4-2.1-1.6z" />
+          </svg>
+          <span class="label">Settings</span>
+        </button>
+      </div>
+    </aside>
+    
+
+    <!-- Main content -->
+    <main class="content">
+      <section class="masonry" aria-label="Pins">
+        <!-- Demo cards -->
+        <div class="card"><img src="https://picsum.photos/400/600?random=1" alt="Pin 1">
+          <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/400/500?random=2" alt="Pin 2">
+         <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/400/450?random=3" alt="Pin 3">
+         <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/400/700?random=4" alt="Pin 4">
+         <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/400/550?random=5" alt="Pin 5">
+         <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/400/620?random=6" alt="Pin 6">
+         <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/400/580?random=7" alt="Pin 7">
+         <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/400/640?random=8" alt="Pin 8">
+         <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/420?random=9" alt="Pin 9">
+         <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/500?random=10"alt="Pin 10">
+         <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/380?random=11"alt="Pin 11">
+         <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/460?random=12"alt="Pin 12">
+         <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/540?random=13"alt="Pin 13">
+         <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/410?random=14"alt="Pin 14">
+         <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/490?random=15"alt="Pin 15">
+          <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/360?random=16"alt="Pin 16">
+          <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+
+        <div class="card"><img src="https://picsum.photos/300/430?random=17"alt="Pin 17">
+          <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/520?random=18"alt="Pin 18">
+          <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/390?random=19"alt="Pin 19">
+          <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/470?random=20"alt="Pin 20">
+          <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/560?random=21"alt="Pin 21">
+          <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/405?random=22"alt="Pin 22">
+          <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/495?random=23"alt="Pin 23">
+          <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        <div class="card"><img src="https://picsum.photos/300/365?random=24"alt="Pin 24">
+          <div class="overlay"> <button class="save-btn">Save</button> <div class="icons"> 
+        <span><img src="https://tse4.mm.bing.net/th/id/OIP.vrOUth1fB9lUtXm9sz__zwAAAA?pid=Api&P=0&h=180" alt="share" class="icon"></span> </div> </div></div>
+        </section>
+    </main>
+  </div>
+
+  <!-- Optional: simple active state handler -->
+  
 </body>
 </html>
