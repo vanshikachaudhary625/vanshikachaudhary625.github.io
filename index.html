@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Pinterest-style Left Nav</title>
   <style>
     :root {
@@ -287,40 +288,9 @@
   color: #fff;
   font-size: 1.25rem;
 }
-/* Responsive layout */
-@media (max-width: 64em) {
-  .sidebar {
-    width: 15%;
-  }
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 
-@media (max-width: 48em) {
-  .sidebar {
-    display: none;
-  }
-  .grid {
-    grid-template-columns: 1fr;
-    padding: 0 5vw;
-  }
-  .search-bar {
-    width: 90%;
-    left: 5%;
-  }
-}
+  
 
-@media (max-width: 30em) {
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  .pin img {
-    max-width: 100%;
-    height: auto;
-  }
-}
 
 
     .card img:hover {
@@ -328,14 +298,35 @@
        }
 
   
-    @media (max-width: 75rem) { .masonry { column-count: 4; } }
-    @media (max-width: 62rem)  { .masonry { column-count: 3; } }
-    @media (max-width: 48rem)  { .masonry { column-count: 2; } }
-    @media (max-width: 35rem)  {
-      :root { --sidebar-w: 64px; }
-      .nav-btn .label { display: none; }
-      .masonry { column-count: 1; }
-    }
+ /* Masonry responsive */
+@media (max-width: 75rem) {
+  .masonry { column-count: 4; }
+}
+@media (max-width: 62rem) {
+  .masonry { column-count: 3; }
+}
+@media (max-width: 48rem) {
+  .sidebar { display: none; }
+  .masonry { column-count: 2; }
+  .search-bar {
+    width: 90%;
+    margin: 1rem auto; /* center align */
+    position: relative;
+    left: 0;
+  }
+}
+@media (max-width: 35rem) {
+  .masonry { column-count: 2; }
+  .overlay { font-size: 0.9rem; }
+  .card img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+
+
+    
   </style>
 </head>
 <body>
