@@ -287,6 +287,41 @@
   color: #fff;
   font-size: 1.25rem;
 }
+/* Responsive layout */
+@media (max-width: 64em) {
+  .sidebar {
+    width: 15%;
+  }
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 48em) {
+  .sidebar {
+    display: none;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+    padding: 0 5vw;
+  }
+  .search-bar {
+    width: 90%;
+    left: 5%;
+  }
+}
+
+@media (max-width: 30em) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .pin img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
 
     .card img:hover {
        filter: brightness(70%);
